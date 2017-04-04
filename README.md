@@ -2,7 +2,7 @@
 
 ## Spring mvc, Spring Jpa, Spring boot, Hibernate, Thymeleaf
 
-Developed using IntelliJ
+Maven project, developed using IntelliJ
 
 This is a mall tutorial about pagination using thymeleaf and spring jpa
 
