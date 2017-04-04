@@ -2,6 +2,8 @@
 
 ## Spring mvc, Spring Jpa, Spring boot, Hibernate, Thymeleaf
 
+Developed using IntelliJ
+
 This is a mall tutorial about pagination using thymeleaf and spring jpa
 
 In oder to run the project, first configure database parameters in application.properties;
