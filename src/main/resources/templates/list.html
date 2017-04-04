@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/pagination.css}" rel="stylesheet"/>
+    <title>List</title>
+</head>
+<body>
+<div class="container"><!--search text area-->
+    <form role="form" th:action="@{/}" method="GET">
+        <div class="row">
+            <div class="col-sm-9">
+                <input type="hidden" id="pageSize" name="pageSize" th:value="${pager.getSelectedPageSize()}"/>
+                <input type="hidden" id="page" name="page" th:value="1"/>
+                <input type="text" id="search" name="search" th:value="${search}" class="form-control"
+                       placeholder="Search"/>
+            </div>
+            <div class="col-sm-3">
+                <button class="form-control btn btn-primary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div th:if="${list.getTotalElements() > 0}"><!--list all matching data when found, otherwise display warning-->
+        <div class="row center">
+            <h1>List</h1>
+        </div>
+        <div class="row">
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                </tr>
+                <tr th:each="person : ${list}"><!--list all matching data-->
+                    <td th:text="${person.name}"></td>
+                    <td th:text="${person.email}"></td>
+                    <td th:text="${person.age}"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="row"><!--list selectable page size, defined in Pager class-->
+            <div class="form-group col-md-1">
+                <select class="form-control pagination" id="pageSizeSelect">
+                    <option th:each="pageSize : ${pager.getPageSizes()}" th:text="${pageSize}" th:value="${pageSize}"
+                            th:selected="${pageSize} == ${pager.getSelectedPageSize()}"></option>
+                </select>
+            </div>
+            <div th:if="${list.getTotalPages() > 1}" class="form-group col-md-11 center">
+                <ul class="pagination"><!--list pagination button range, defined in Pager class-->
+                    <!--buttons are disabled if it is first page or last page reached-->
+                    <!--no buttons displayed when less than a page data found-->
+                    <li th:class="${list.getNumber() == 0} ? disabled"><a class="pageLink"
+                                                                          th:href="@{/(pageSize=${pager.getSelectedPageSize()}, page=1, search=${search})}">&laquo;</a>
+                    </li><!--list all matching data-->
+                    <li th:class="${list.getNumber() == 0} ? disabled"><a class="pageLink"
+                                                                          th:href="@{/(pageSize=${pager.getSelectedPageSize()}, page=${list.getNumber()}, search=${search})}">&larr;</a>
+                    </li>
+                    <li th:class="${list.getNumber() == (page - 1)} ? 'active pointer-disabled'"
+                        th:each="page : ${#numbers.sequence(pager.getStartPage(), pager.getEndPage())}"><a
+                            class="pageLink"
+                            th:href="@{/(pageSize=${pager.getSelectedPageSize()}, page=${page}, search=${search})}"
+                            th:text="${page}"></a></li>
+                    <li th:class="${list.getNumber() + 1 == list.getTotalPages()} ? disabled"><a class="pageLink"
+                                                                                                 th:href="@{/(pageSize=${pager.getSelectedPageSize()}, page=${list.getNumber() + 2}, search=${search})}">&rarr;</a>
+                    </li>
+                    <li th:class="${list.getNumber() + 1 == list.getTotalPages()} ? disabled"><a class="pageLink"
+                                                                                                 th:href="@{/(pageSize=${pager.getSelectedPageSize()},page=${list.getTotalPages()}, search=${search})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--display warning when no matching data found-->
+    <div th:if="${(search != null and search !='') and list.getTotalElements()==0}">
+        <div class="row">
+            <div class=" alert alert-danger center no-data">
+                No Matching Data Found!
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/pagination.js}"></script>
+</body>
+</html>
